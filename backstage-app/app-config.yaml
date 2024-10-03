@@ -1,0 +1,139 @@
+app:
+  title: CNOE
+  baseUrl: http://localhost:3000
+
+organization:
+  name: CNOE
+
+backend:
+  # Used for enabling authentication, secret is shared by all backend plugins
+  # See https://backstage.io/docs/auth/service-to-service-auth for
+  # information on the format
+  # auth:
+  #   keys:
+  #     - secret: ${BACKEND_SECRET}
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+    # Uncomment the following host directive to bind to specific interfaces
+    # host: 127.0.0.1
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  # This is for local development only, it is not recommended to use this in production
+  # The production database configuration is stored in app-config.production.yaml
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+integrations:
+  gitea:
+    - baseUrl: https://cnoe.localtest.me:8443/gitea
+      host: cnoe.localtest.me:8443
+      username: giteaAdmin
+      password: ${GITEA_PASSWORD}
+    - baseUrl: https://cnoe.localtest.me/gitea
+      host: cnoe.localtest.me
+      username: giteaAdmin
+      password: ${GITEA_PASSWORD}
+
+proxy:
+  ### Example for how to add a proxy endpoint for the frontend.
+  ### A typical reason to do this is to handle HTTPS and CORS for internal services.
+  # endpoints:
+  #   '/test':
+  #     target: 'https://example.com'
+  #     changeOrigin: true
+
+# Reference documentation http://backstage.io/docs/features/techdocs/configuration
+# Note: After experimenting with basic setup, use CI/CD to generate docs
+# and an external cloud storage when deploying TechDocs for production use-case.
+# https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
+techdocs:
+  builder: 'local' # Alternatives - 'external'
+  generator:
+    runIn: 'docker' # Alternatives - 'local'
+  publisher:
+    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+auth:
+  # see https://backstage.io/docs/auth/ to learn about auth providers
+  environment: local # set this to development to enable SSO
+  session:
+    secret: abcdfkjalskdfjkla
+  providers:
+    guest: {}
+    keycloak-oidc:
+      development:
+        metadataUrl: https://cnoe.localtest.me:8443/keycloak/realms/cnoe/.well-known/openid-configuration
+        clientId: backstage
+        clientSecret: ${KEYCLOAK_CLIENT_SECRET}
+        prompt: auto
+
+scaffolder:
+  # see https://backstage.io/docs/features/software-templates/configuration for software template options
+  defaultAuthor:
+    name: backstage-scaffolder
+    email: noreply
+  defaultCommitMessage: "backstage scaffolder"
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [ Component, System, API, Resource, Location, Template ]
+  locations:
+    - type: url
+      target: https://cnoe.localtest.me:8443/gitea/giteaAdmin/idpbuilder-localdev-backstage-templates-entities/src/branch/main/catalog-info.yaml
+#    # Local example template
+    - type: file
+      target: ../../examples/basic/template.yaml
+      rules:
+        - allow: [Template]
+    - type: file
+      target: ../../examples/template/template.yaml
+      rules:
+        - allow: [Template]
+#
+#    # Local example organizational data
+#    - type: file
+#      target: ../../examples/org.yaml
+#      rules:
+#        - allow: [User, Group]
+
+    ## Uncomment these lines to add more example data
+    # - type: url
+    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
+
+    ## Uncomment these lines to add an example org
+    # - type: url
+    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+    #   rules:
+    #     - allow: [User, Group]
+kubernetes:
+  serviceLocatorMethod:
+    type: 'multiTenant'
+  clusterLocatorMethods:
+    - type: 'config'
+      clusters:
+        - url: https://127.0.0.1:33277 # you may need to change this
+          name: local
+          authProvider: 'serviceAccount'
+          skipTLSVerify: true
+          # replace with your own service account token value. e.g. kubectl -n backstage exec -it deploy/backstage  -- cat /var/run/secrets/kubernetes.io/serviceaccount/token
+          serviceAccountToken: eyJhbG......
+argocd:
+  appLocatorMethods:
+    - type: 'config'
+      instances:
+        - name: local
+          url: https://cnoe.localtest.me:8443/argocd
+          username: admin
+          # replace with your argocd password e.g. kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+          password: ${ARGOCD_ADMIN_PASSWORD}
+argoWorkflows:
+  baseUrl: https://cnoe.localtest.me:8443/argo-workflows

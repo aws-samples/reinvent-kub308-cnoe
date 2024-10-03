@@ -1,0 +1,52 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  description: Creates a Basic Kubernetes Deployment
+  name: basic
+  title: Create a Basic Deployment
+spec:
+  owner: guest
+  type: service
+  parameters:
+    - title: Configuration Options
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: name of this application
+        version:
+          type: string
+          default: 10
+          description: name of this application
+          ui:options:
+            readOnly: true
+
+        
+        
+  steps:
+    - id: template
+      name: Generating component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{parameters.name}}
+
+    - id: httpRequest
+      name: TestHttpRequest
+      action: cnoe:http:request
+      input:
+        api: https://d5gncndifmj5d.cloudfront.net/argo-events/test002-provisioner
+        method: POST
+        headers: 
+          content-type: 'application/json'
+        body:
+          {
+            "commits": [
+              {
+                "modified": ["provisioner.yaml"]
+              }
+            ]
+          }
+
