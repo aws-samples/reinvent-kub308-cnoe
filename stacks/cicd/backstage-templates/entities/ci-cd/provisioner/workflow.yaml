@@ -68,7 +68,7 @@ spec:
         property: password
     - secretKey: GITEA_TOKEN
       remoteRef:
-        key: gitea-token
+        key: gitea-credential
         property: token
 ---
 apiVersion: v1
