@@ -1,0 +1,77 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: eso-store
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: eso-store
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - selfsubjectrulesreviews
+    verbs:
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: eso-store
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: eso-store
+    namespace: default
+roleRef:
+  kind: Role
+  name: eso-store
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ClusterSecretStore
+metadata:
+  name: idpbuilder-cert
+spec:
+  provider:
+    kubernetes:
+      remoteNamespace: default
+      server:
+        caProvider:
+          type: ConfigMap
+          name: kube-root-ca.crt
+          namespace: argocd
+          key: ca.crt
+      auth:
+        serviceAccount:
+          name: eso-store
+          namespace: default
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: idpbuilder-cert
+  namespace: backstage
+spec:
+  secretStoreRef:
+    name: idpbuilder-cert
+    kind: ClusterSecretStore
+  refreshInterval: "0"
+  target:
+    name: idpbuilder-cert
+  data:
+    - secretKey: ca.crt
+      remoteRef:
+        key: idpbuilder-cert
+        property: ca.crt
