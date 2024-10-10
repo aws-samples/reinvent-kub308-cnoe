@@ -18,6 +18,6 @@ metadata:
       title: Deploy Repo URL
       icon: github
 spec:
-  owner: guest
+  owner: guests
   lifecycle: experimental
   type: service

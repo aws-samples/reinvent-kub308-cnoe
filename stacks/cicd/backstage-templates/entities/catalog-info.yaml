@@ -7,3 +7,12 @@ spec:
   targets:
     - ./basic-remote/template.yaml
     - ./ci-cd/template.yaml
+---
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: basic-organization
+  description: Basic organization data
+spec:
+  targets:
+    - ./organization/guests.yaml
