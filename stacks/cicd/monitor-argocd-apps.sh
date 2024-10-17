@@ -11,6 +11,11 @@ if [ "$#" -eq 0 ]; then
 fi
 # List of application names passed as arguments
 app_names=("$@")
+# Join the application names into a comma-separated list
+app_list=$(IFS=,; echo "${app_names[*]}")
+# Print initial message with application names and a newline
+echo -e "Waiting for applications to be healthy: $app_list."
+echo -n "..."
 # Monitor the status of the applications
 while true; do
   all_healthy=true
@@ -22,7 +27,8 @@ while true; do
     fi
   done
   if $all_healthy; then
-    echo "All applications are Healthy."
+    # Print the final message with a newline at the end
+    echo -e "\nAll applications are Healthy: $app_list.\n"
     break
   else
     echo -n "."

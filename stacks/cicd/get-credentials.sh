@@ -43,3 +43,7 @@ EOT
 git config --global credential.helper 'store'
 
 echo "Git config update completed."
+
+echo "Credential Details:"
+echo "==================="
+cat ~/environment/credentials.txt
