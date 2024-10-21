@@ -23,6 +23,7 @@ spec:
   owner: guests
   lifecycle: experimental
   type: service
+  system: ${{values.name | dump}}
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
