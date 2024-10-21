@@ -43,3 +43,25 @@ spec:
   owner: guests
   lifecycle: experimental
   type: service
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ${{values.name | dump}}
+  description: reInvent API 
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: guests
+  system: ${{values.name}}
+  definition: |
+    openapi: "3.0.0"
+    info:
+      version: 1.0.0
+      title: ${{values.name}} API
+    servers:
+      - url: https:/${{values.repoHost}}/
+    paths:
+      /ping:
+        get:
+          summary: Provides pong from remote eks cluster 
