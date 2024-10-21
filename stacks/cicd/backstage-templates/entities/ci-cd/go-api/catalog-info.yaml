@@ -7,9 +7,30 @@ metadata:
   annotations:
     backstage.io/kubernetes-label-selector: 'entity-id=${{values.name}}'
     argocd/app-selector: 'entity-id=${{values.name}}'
+    backstage.io/kubernetes-cluster: workshop
     argo-workflows.cnoe.io/cluster-name: local
     argo-workflows.cnoe.io/namespace: ${{values.name}}
     argo-workflows.cnoe.io/label-selector: 'entity-id=${{values.name}}'
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - url: https://${{values.repoHost}}:443/gitea/giteaAdmin/${{values.name}}
+      title: App Repo URL
+      icon: github
+    - url: https://${{values.repoHost}}:443/gitea/giteaAdmin/${{values.name}}-deploy
+      title: Deploy Repo URL
+      icon: github
+spec:
+  owner: guests
+  lifecycle: experimental
+  type: service
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: ${{values.name | dump}}
+  description: An example system for demonstration purposes
+  annotations:
+    backstage.io/techdocs-ref: dir:.
   links:
     - url: https://${{values.repoHost}}:443/gitea/giteaAdmin/${{values.name}}
       title: App Repo URL

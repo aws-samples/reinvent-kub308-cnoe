@@ -27,7 +27,7 @@ metadata:
   annotations:
     backstage.io/techdocs-ref: dir:.
   links:
-    - url: https://cnoe.localtest.me:8443/gitea
+    - url: https://cnoe.localtest.me:8443/gitea/giteaAdmin/${{values.name}}
       title: CNOE Repo 
       icon: github
 spec:

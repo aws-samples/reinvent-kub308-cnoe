@@ -2,7 +2,7 @@
 
 # Example Basic Application
 
-Thanks for trying out this demo! In this example, we deployed a simple nginx deployment to a remote cluster using Backstage.
+Thanks for trying out this demo! In this example, we deployed go application with CICD to a remote cluster using Backstage.
 
 ### idpbuilder
 
