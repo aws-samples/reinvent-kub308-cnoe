@@ -31,8 +31,6 @@ kind: System
 metadata:
   name: ${{values.name | dump}}
   description: An example system for demonstration purposes
-  annotations:
-    backstage.io/techdocs-ref: dir:.
   links:
     - url: https://${{values.repoHost}}:443/gitea/giteaAdmin/${{values.name}}
       title: App Repo URL
@@ -55,14 +53,5 @@ spec:
   lifecycle: experimental
   owner: guests
   system: ${{values.name}}
-  definition: |
-    openapi: "3.0.0"
-    info:
-      version: 1.0.0
-      title: ${{values.name}} API
-    servers:
-      - url: https://${{values.repoHost}}/
-    paths:
-      /ping:
-        get:
-          summary: Provides pong from remote eks cluster 
+  definition:
+    $text: ./swaggerdocs/swagger_apis.json

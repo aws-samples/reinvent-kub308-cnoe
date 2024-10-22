@@ -1,0 +1,36 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "${{values.name}} REST Api",
+      "description": "This is a REST API reference for the ${{values.name}} app",
+      "version": "1"
+    },
+    "paths": {
+      "/ping": {
+        "get": {
+          "tags": [
+            "Demo App"
+          ],
+          "description": "Returns a pong response from the demo app.\n\n",
+          "responses": {
+            "2XX": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Pong from server: server001"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
