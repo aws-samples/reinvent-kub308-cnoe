@@ -24,6 +24,7 @@ spec:
   lifecycle: experimental
   type: service
   system: ${{values.name | dump}}
+  providesApis: ['api:${{values.name}}']
 ---
 apiVersion: backstage.io/v1alpha1
 kind: System
@@ -60,7 +61,7 @@ spec:
       version: 1.0.0
       title: ${{values.name}} API
     servers:
-      - url: https:/${{values.repoHost}}/
+      - url: https://${{values.repoHost}}/
     paths:
       /ping:
         get:
