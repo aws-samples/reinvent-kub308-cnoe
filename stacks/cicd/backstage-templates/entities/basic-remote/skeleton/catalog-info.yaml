@@ -7,7 +7,7 @@ metadata:
   annotations:
     backstage.io/techdocs-ref: dir:.
     backstage.io/kubernetes-label-selector: 'entity-id=${{values.name}}'
-    backstage.io/kubernetes-namespace: default
+    backstage.io/kubernetes-cluster: workshop
     argocd/app-name: ${{values.name | dump}}
   links:
     - url: https://cnoe.localtest.me:8443/gitea
